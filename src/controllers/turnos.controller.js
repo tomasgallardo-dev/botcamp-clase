@@ -19,7 +19,13 @@ const respuestaEstandar = (res, status, success, message, data = null) => {
 
 
 const getTurnos = (req, res) => {
-    respuestaEstandar(res, 200, true, 'Turnos obtenidos exitosamente', turnos);
+    try {
+        const turnos = await Turno.find();
+        
+        return respuestaEstandar(res, 200, true, 'Turnos obtenidos exitosamente', turnos);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
 };
 
 const createTurno = async (req, res) => {
@@ -40,15 +46,18 @@ const createTurno = async (req, res) => {
 };
 
 const deleteTurno = (req, res) => {
-    const { id } = req.params;
-    const turnoExiste = turnos.some(t => t.id === parseInt(id));
+    try {
+        const { id } = req.params;
+        const turnoEliminado = await Turno.findByIdAndDelete(id);
+        
+        if (!turnoEliminado) {
+            return respuestaEstandar(res, 404, false, 'Turno no encontrado con ID ${id}');
+        }
 
-    if (!turnoExiste) {
-        return respuestaEstandar(res, 404, false, 'Turno no encontrado');
+        return respuestaEstandar(res, 200, true, 'Turno eliminado exitosamente', turnoEliminado);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
-
-    turnos = turnos.filter(t => t.id !== parseInt(id));
-    respuestaEstandar(res, 200, true, 'Turno eliminado exitosamente', turnos);
 };
 
 module.exports = { getTurnos, createTurno, deleteTurno };
