@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+//aca se define el modelo de datos para los turnos, con sus respectivos campos y validaciones
 const turnoSchema = new mongoose.Schema({
     paciente: {
         type: String,
@@ -9,13 +9,14 @@ const turnoSchema = new mongoose.Schema({
     dni: {
         type: String,
         required: [true, 'El DNI del paciente es obligatorio'],
-        match: [/^[0-9]{7,8}$/, 'El DNI debe contener entre 8 y 10 dígitos'],
+        match: [/^[0-9]{8,10}$/, 'El DNI debe contener entre 8 y 10 dígitos'],
     },
     especialidad: {
         type: String,
         required: true,
+        lowercase: true, 
         enum: {
-            values: ['cardiologia', 'neurologia', 'pediatria', 'dermatologia'],
+            values: ['cardiologia', 'dermatologia', 'clinica medica',  'pediatria','neurologia', 'traumatologia', 'odontologia', 'oftalmologia', 'ginecologia', 'psiquiatria','geriatria', 'endocrinologia', 'gastroenterologia', 'urologia', 'otorrinolaringologia', 'reumatologia', 'neumonologia', 'oncologia', 'hematologia', 'inmunologia', 'infectologia', 'bacteriologia'],
             message: '{VALUE} no es una especialidad válida',
         },
     },
