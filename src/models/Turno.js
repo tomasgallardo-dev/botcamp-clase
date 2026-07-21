@@ -19,6 +19,12 @@ const turnoSchema = new mongoose.Schema({
             values: ['cardiologia', 'dermatologia', 'clinica medica',  'pediatria','neurologia', 'traumatologia', 'odontologia', 'oftalmologia', 'ginecologia', 'psiquiatria','geriatria', 'endocrinologia', 'gastroenterologia', 'urologia', 'otorrinolaringologia', 'reumatologia', 'neumonologia', 'oncologia', 'hematologia', 'inmunologia', 'infectologia', 'bacteriologia'],
             message: '{VALUE} no es una especialidad válida',
         },
+        uppercasse:true,
+        set: function(value) {
+        return value
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+        }
     },
     fechaTurno: {
         type: Date,

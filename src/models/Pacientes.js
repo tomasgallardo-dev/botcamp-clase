@@ -65,7 +65,7 @@ const pacientesSchema = new mongoose.Schema({
         numero: {
             type: String,
             required: [true, 'El número de teléfono es obligatorio'],
-            match: [/^\d{7,10}$/, 'El número de teléfono debe contener entre 7 y 10 dígitos'],
+            match: [/^\d{6,9}$/, 'El número de teléfono debe contener entre 6 y 9 dígitos'],
         },
     },
     correoelectronico: {
