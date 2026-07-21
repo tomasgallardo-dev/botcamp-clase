@@ -78,17 +78,24 @@ const pacientesSchema = new mongoose.Schema({
         obraSocial: {
             type: String,
             enum: {
-                values: ['OSDE', 'Swiss Medical', 'Galeno', 'Medifé', 'Ninguno'],
-                message: 'La obra social debe ser una de las siguientes: OSDE, Swiss Medical, Galeno, Medifé, Ninguno',
+                values: ['OSDE', 'PAMI','SWISS MEDICAL', 'GALENO', 'MEDIFE','IOSFA', 'OTRO', 'NINGUNA'],
+                message: '{VALUE} no es una obra social válida'
             },
             required: true,
+            uppercase: true,
+            set: function(value) {
+                return value
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toUpperCase();
+            }
         },
 
         numAfiliado: {
             type: String,
             required: [
                 function() {
-                    return this.historialMedico.obraSocial !== 'Ninguno';
+                    return this.historialMedico.obraSocial !== 'NINGUNA';
                 },
                 'El número de afiliado es obligatorio si tiene obra social',
             ],
@@ -112,4 +119,4 @@ const pacientesSchema = new mongoose.Schema({
     },
 });
 
-module.exports = mongoose.model('Paciente', pacientesSchema);
+module.exports = mongoose.model('Paciente', pacientesSchema, 'pacientes');
