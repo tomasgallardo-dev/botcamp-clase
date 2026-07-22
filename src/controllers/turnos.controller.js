@@ -1,20 +1,13 @@
 // aca se definen los controladores para manejar las rutas relacionadas con los turnos
-const Turno = require("../models/Turno.js");
+const Turno = require('../models/Turno.js');
+const respuestaEstandar = require('../utils/respuestaEstandar.js')
 
-const respuestaEstandar = (res, status, success, message, data = null) => {
-    return res.status(status).json({
-        success,
-        timestamp: new Date().toISOString(),
-        message,
-        total: Array.isArray(data) ? data.length : data ? 1 : 0,
-        data
-    });
-};
 
 // Controlador para obtener todos los turnos
 const getTurnos = async (req, res) => {
     try {
-        const turnos = await Turno.find();
+        const turnos = await Turno.find()
+            .populate('paciente');
 
         return respuestaEstandar(res, 200, true, 'Turnos obtenidos exitosamente', turnos);
     } catch (error) {
@@ -45,7 +38,7 @@ const deleteTurno = async (req, res) => {
         const turnoEliminado = await Turno.findByIdAndDelete(id);
         // si no se encuentra el turno con el ID proporcionado, se devuelve un mensaje de error
         if (!turnoEliminado) {
-            return respuestaEstandar(res, 404, false, 'Turno no encontrado con ID ${id}');
+            return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
         }
         //si el turno se elimina exitosamente, se devuelve un mensaje de éxito con los datos del turno eliminado
         return respuestaEstandar(res, 200, true, 'Turno eliminado exitosamente', turnoEliminado);
@@ -124,4 +117,4 @@ const updateEspecialidad = async (req, res) => {
     }
 };
 
-module.exports = { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad  };
+module.exports = { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad };

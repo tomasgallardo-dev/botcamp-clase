@@ -1,14 +1,6 @@
 const Paciente = require('../models/Pacientes.js');
+const respuestaEstandar = require('../utils/respuestaEstandar.js')
 
-const respuestaEstandar = (res, status, success, message, data = null) => {
-    return res.status(status).json({
-        success,
-        timestamp: new Date().toISOString(),
-        message,
-        total: Array.isArray(data) ? data.length : data ? 1 : 0,
-        data,
-    });
-};
 
 // controlador para obtener todos los pacientes
 const getPacientes = async (req, res) => {
