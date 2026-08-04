@@ -1,3 +1,10 @@
+// ============================================================
+//  RUTAS: Turnos
+//  Descripción: Endpoints de turnos. Todas cuelgan de /api/v1/turnos
+//  NOTA: versión MÁS COMPLETA (incluye filtro por especialidad,
+//  PUT y PATCH que no estaban en feature/especialidades).
+// ============================================================
+
 // src/routes/turnos.routes.js
 const express = require("express");
 const router = express.Router();

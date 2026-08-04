@@ -1,3 +1,12 @@
+// ============================================================
+//  CONTROLADOR: Turnos
+//  Descripción: Lógica de negocio de los turnos (listar, crear,
+//  eliminar, filtrar por especialidad, actualizar).
+//  NOTA: Esta es la versión MÁS COMPLETA (unifica master + rama
+//  feature/especialidades que solo tenía getTurnos, createTurno,
+//  deleteTurno).
+// ============================================================
+
 // aca se definen los controladores para manejar las rutas relacionadas con los turnos
 const Turno = require('../models/Turno.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js')
@@ -6,7 +15,7 @@ const respuestaEstandar = require('../utils/respuestaEstandar.js')
 // Controlador para obtener todos los turnos
 const getTurnos = async (req, res) => {
     try {
-        const turnos = await Turno.find()
+        const turnos = await Turno.find({ activo: true })
             .populate('paciente');
 
         return respuestaEstandar(res, 200, true, 'Turnos obtenidos exitosamente', turnos);
@@ -18,15 +27,36 @@ const getTurnos = async (req, res) => {
 const createTurno = async (req, res) => {
     try {
 
-        const nuevoTurno = await Turno.create(req.body);
+        const origenPeticion = req.headers['x-origen'];
+        const tokenSeguridad = req.headers['authorization'];
+
+        console.log("🌎 Peticion realizada desde:", origenPeticion);
+
+        if (tokenSeguridad != 'token123') {
+            return respuestaEstandar(res, 401, false, 'no tiene permisos');
+        }
+        
+        const esUrgente = req.query.urgencia === 'true';
+
+        const datosDelTurno = {
+            paciente: req.body.paciente,
+            especialidad: req.body.especialidad,
+            fechaTurno: req.body.fechaTurno
+        };
+
+        if (esUrgente) {
+            datosDelTurno.estado = 'atendido';
+            datosDelTurno.observaciones = 'ingreso por guardia medica';
+            console.log("ALERTA: registrado un turno de urgencia");
+        }
+
+        const nuevoTurno = await Turno.create(datosDelTurno);
         return respuestaEstandar(res, 201, true, 'Turno creado exitosamente', nuevoTurno);
     } catch (error) {
-        // si el error es de validación, se devuelve un mensaje de error con los detalles de la validación
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
-    }
-
+        }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
 };
@@ -35,7 +65,11 @@ const createTurno = async (req, res) => {
 const deleteTurno = async (req, res) => {
     try {
         const { id } = req.params;
-        const turnoEliminado = await Turno.findByIdAndDelete(id);
+        const turnoEliminado = await Turno.findByIdAndUpdate(
+            id,
+            { activo: false },
+            { new: true }
+        );
         // si no se encuentra el turno con el ID proporcionado, se devuelve un mensaje de error
         if (!turnoEliminado) {
             return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);

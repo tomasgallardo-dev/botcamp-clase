@@ -1,3 +1,10 @@
+// ============================================================
+//  MODELO: Paciente
+//  Descripción: Define la estructura de datos de los pacientes.
+//  Incluye datos personales, contacto, obra social y el historial
+//  médico (consultas registradas).
+// ============================================================
+
 const mongoose = require('mongoose');
 
 const pacientesSchema = new mongoose.Schema({
@@ -101,21 +108,25 @@ const pacientesSchema = new mongoose.Schema({
             ],
         },
 
-        gruposSanguineos: {
-            type: String,
-            enum: {
-                values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-                message: '{VALUE} no es un grupo sanguíneo válido',
-            },
-        },
-        alergias: {
-            type: [String],
-            default: [],
-        },
-        enfermedadesPrevias: {
-            type: [String],
-            default: [],
-        },
+        consultas: [
+            {
+                fecha: {
+                    type: Date,
+                    default: Date.now
+                },
+                diagnostico: {
+                    type: String,
+                    required: [true, 'El diagnostico es obligatorio...'],
+                },
+                tratamiento: {
+                    type: String,
+                },
+                medico: {
+                    type: String,
+                    required: [true, 'Poner el nombre del medico/a que se va a atender']
+                }
+            }
+        ]
     },
 });
 
