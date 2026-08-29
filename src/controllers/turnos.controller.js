@@ -121,6 +121,22 @@ const updateTurno = async (req, res) => {
     }
 };
 
+const marcarAtendido = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const turnoActualizado = await Turno .findByIdAndUpdate(id, { estado: 'atendido' }, { new: true });
+
+        if (!turnoActualizado) {
+            return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Turno marcado como atendido', turnoActualizado);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
 // Controlador para actualizar solo la especialidad de un turno (PATCH)
 const updateEspecialidad = async (req, res) => {
     try {
@@ -151,4 +167,4 @@ const updateEspecialidad = async (req, res) => {
     }
 };
 
-module.exports = { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad };
+module.exports = { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad, marcarAtendido };

@@ -59,11 +59,6 @@ const pacientesSchema = new mongoose.Schema({
     },
 
     telefono: {
-        codpais: {
-            type: String,
-            required: [true, 'El código de país es obligatorio'],
-            match: [/^\+\d{1,3}$/, 'El código de país debe comenzar con + seguido de 1 a 3 dígitos'],
-        },
         codigoArea: {
             type: String,
             required: [true, 'El código de área es obligatorio'],

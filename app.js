@@ -24,11 +24,14 @@ require("dotenv").config();
 //    express: framework para crear el servidor y manejar rutas.
 //    connectDB: función que conecta con MongoDB.
 // ------------------------------------------------------------
+const cors = require("cors");
 const express = require("express");
 const connectDB = require('./src/config/database');
 
-// Creamos la instancia de la aplicación Express.
+// Creamos la instancia de la aplicación Express y habilitamos CORS para permitir peticiones desde otros dominios.
 const app = express();
+app.use(cors());
+
 
 // ------------------------------------------------------------
 // 3) CONECTAR A MONGODB
@@ -71,6 +74,8 @@ const consultorioRoutes = require("./src/routes/consultorio.routes");    // CRUD
 //    app.use() registra middlewares que se ejecutan en TODAS
 //    las peticiones HTTP que lleguen al servidor.
 // ------------------------------------------------------------
+// CORS: permite que el servidor acepte peticiones desde otros dominios (por ejemplo, desde el frontend).
+app.use(cors());
 // express.json(): permite recibir JSON en el body de las peticiones.
 app.use(express.json());
 
