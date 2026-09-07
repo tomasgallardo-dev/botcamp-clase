@@ -1,12 +1,3 @@
-// ============================================================
-//  MODELO: Medico
-//  Descripción: Define la estructura de datos de los médicos de
-//  la salita municipal.
-//  Agregado por la rama: feature/medico
-//  NOTA: especialidad es un ObjectId que referencia al modelo
-//  "Especialidad" (integración con feature/especialidades).
-// ============================================================
-
 const mongoose = require('mongoose');
 
 const medicoSchema = new mongoose.Schema({
@@ -24,7 +15,7 @@ const medicoSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Especialidad',
         required: true,
-        },
+    },
     telefono: {
         type: String,
         required: [true, 'El teléfono es obligatorio'],

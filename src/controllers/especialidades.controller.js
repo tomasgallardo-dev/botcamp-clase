@@ -1,14 +1,6 @@
-// ============================================================
-//  CONTROLADOR: Especialidades
-//  Descripción: Lógica de negocio de las especialidades médicas
-//  (listar y crear).
-//  Agregado por la rama: feature/especialidades
-// ============================================================
-
 const Especialidades = require('../models/especialidades.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js');
 
-// Controlador para obtener todos las especialidades
 const getEspecialidades = async (req, res) => {
     try {
         const especialidad = await Especialidades.find();
@@ -18,7 +10,6 @@ const getEspecialidades = async (req, res) => {
     }
 };
 
-// Controlador para crear una nueva especialidad
 const createEspecialidad = async (req, res) => {
     try {
         const nuevaEspecialidad = await Especialidades.create(req.body);
@@ -32,4 +23,42 @@ const createEspecialidad = async (req, res) => {
     }
 };
 
-module.exports = { getEspecialidades, createEspecialidad};
+const updateEspecialidad = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const especialidadActualizada = await Especialidades.findByIdAndUpdate(id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!especialidadActualizada) {
+            return respuestaEstandar(res, 404, false, `Especialidad no encontrada con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Especialidad actualizada exitosamente', especialidadActualizada);
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const errores = Object.values(error.errors).map(err => err.message);
+            return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
+// ✅ NUEVO: Eliminar especialidad
+const deleteEspecialidad = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const especialidadEliminada = await Especialidades.findByIdAndDelete(id);
+
+        if (!especialidadEliminada) {
+            return respuestaEstandar(res, 404, false, `Especialidad no encontrada con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Especialidad eliminada exitosamente', especialidadEliminada);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
+module.exports = { getEspecialidades, createEspecialidad, updateEspecialidad, deleteEspecialidad };

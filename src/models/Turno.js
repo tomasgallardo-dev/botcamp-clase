@@ -1,10 +1,3 @@
-// ============================================================
-//  MODELO: Turno
-//  Descripción: Define la estructura de datos de los turnos de la
-//  salita. Cada turno vincula un paciente con una especialidad y
-//  una fecha, y tiene un estado (pendiente, atendido, cancelado).
-// ============================================================
-
 const mongoose = require('mongoose');
 //aca se define el modelo de datos para los turnos, con sus respectivos campos y validaciones
 const turnoSchema = new mongoose.Schema({
@@ -37,6 +30,11 @@ const turnoSchema = new mongoose.Schema({
             },
             message: 'La fecha del turno debe ser una fecha futura',
         },
+    },
+    medico: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Medico',
+        required: [true, 'El médico es obligatorio'],
     },
     estado: {
         type: String,

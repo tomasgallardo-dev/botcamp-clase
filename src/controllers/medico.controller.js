@@ -1,11 +1,3 @@
-// ============================================================
-//  CONTROLADOR: Medico
-//  Descripción: Lógica de negocio de los médicos (listar activos,
-//  crear y eliminar).
-//  Agregado por la rama: feature/medico
-// ============================================================
-
-// src/controllers/medico.controller.js
 const Medico = require('../models/medico.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js');
 
@@ -49,4 +41,27 @@ const deleteMedico = async (req, res) => {
     }
 };
 
-module.exports = { getMedicos, createMedico, deleteMedico };
+// Actualizar medico
+const updateMedico = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const medicoActualizado = await Medico.findByIdAndUpdate(id, req.body, {
+            new: true,
+            runValidators: true,
+        });
+
+        if (!medicoActualizado) {
+            return respuestaEstandar(res, 404, false, `Médico no encontrado con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Médico actualizado exitosamente', medicoActualizado);
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const errores = Object.values(error.errors).map(err => err.message);
+            return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
+module.exports = { getMedicos, createMedico, deleteMedico, updateMedico };

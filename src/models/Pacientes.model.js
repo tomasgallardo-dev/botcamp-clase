@@ -1,10 +1,3 @@
-// ============================================================
-//  MODELO: Paciente
-//  Descripción: Define la estructura de datos de los pacientes.
-//  Incluye datos personales, contacto, obra social y el historial
-//  médico (consultas registradas).
-// ============================================================
-
 const mongoose = require('mongoose');
 
 const pacientesSchema = new mongoose.Schema({
@@ -13,7 +6,6 @@ const pacientesSchema = new mongoose.Schema({
         required: [true, 'El nombre del paciente es obligatorio'],
         uppercase: true,
     },
-
     dni: {
         type: String,
         required: [true, 'El DNI del paciente es obligatorio'],
@@ -33,11 +25,10 @@ const pacientesSchema = new mongoose.Schema({
         type: String,
         required: [true, 'El sexo del paciente es obligatorio'],
         enum: {
-            values: ['Masculino', 'Femenino'],
-            message: 'El sexo debe ser Masculino o Femenino'
+            values: ['Masculino', 'Femenino', 'Otro'],
+            message: 'El sexo debe ser Masculino, Femenino u Otro'
         },
     },
-
     direccion: {
         calle:{
             type: String,
@@ -57,7 +48,6 @@ const pacientesSchema = new mongoose.Schema({
             required: [true, 'La provincia es obligatoria'],
         }
     },
-
     telefono: {
         codigoArea: {
             type: String,
@@ -92,7 +82,6 @@ const pacientesSchema = new mongoose.Schema({
                     .toUpperCase();
             }
         },
-
         numAfiliado: {
             type: String,
             required: [
@@ -102,7 +91,6 @@ const pacientesSchema = new mongoose.Schema({
                 'El número de afiliado es obligatorio si tiene obra social',
             ],
         },
-
         consultas: [
             {
                 fecha: {
@@ -123,6 +111,16 @@ const pacientesSchema = new mongoose.Schema({
             }
         ]
     },
+});
+
+// ✅ AGREGADO: Transformar _id → id para consistencia con el resto de modelos
+pacientesSchema.set('toJSON', {
+    transform: (documento, pacienteRetorno) => {
+        pacienteRetorno.id = pacienteRetorno._id;
+        delete pacienteRetorno._id;
+        delete pacienteRetorno.__v;
+        return pacienteRetorno;
+    }
 });
 
 module.exports = mongoose.model('Paciente', pacientesSchema, 'pacientes');

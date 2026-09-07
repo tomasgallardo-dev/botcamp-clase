@@ -1,24 +1,14 @@
-// ============================================================
-//  CONTROLADOR: Pacientes
-//  Descripción: Lógica de negocio de los pacientes (listar con
-//  filtros, crear, eliminar, agregar consultas al historial).
-// ============================================================
-
 const Paciente = require('../models/Pacientes.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js')
-
 
 // controlador para obtener todos los pacientes
 const getPacientes = async (req, res) => {
     try {
-
-        // ?obraSocial=OSDE&dni=12345678
         const { obraSocial, dni } = req.query;
 
         const filtro = {};
 
         if (obraSocial) {
-            // filtro.obraSocial = "" "" ""
             filtro['historialMedico.obraSocial'] = obraSocial.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
         }
 

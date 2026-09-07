@@ -1,20 +1,20 @@
-// ============================================================
-//  CONTROLADOR: Turnos
-//  Descripción: Lógica de negocio de los turnos (listar, crear,
-//  eliminar, filtrar por especialidad, actualizar).
-//  NOTA: Esta es la versión MÁS COMPLETA (unifica master + rama
-//  feature/especialidades que solo tenía getTurnos, createTurno,
-//  deleteTurno).
-// ============================================================
-
-// aca se definen los controladores para manejar las rutas relacionadas con los turnos
 const Turno = require('../models/Turno.js');
-const respuestaEstandar = require('../utils/respuestaEstandar.js')
-
+const respuestaEstandar = require('../utils/respuestaEstandar.js');
 
 // Controlador para obtener todos los turnos
 const getTurnos = async (req, res) => {
     try {
+        const { id } = req.query;
+
+        // ✅ CORREGIDO: Si viene id, buscar por findById
+        if (id) {
+            const turno = await Turno.findById(id).populate('paciente');
+            if (!turno) {
+                return respuestaEstandar(res, 404, false, 'Turno no encontrado');
+            }
+            return respuestaEstandar(res, 200, true, 'Turno obtenido exitosamente', turno);
+        }
+
         const turnos = await Turno.find({ activo: true })
             .populate('paciente');
 
@@ -23,25 +23,17 @@ const getTurnos = async (req, res) => {
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
 };
-// Controlador para crear un nuevo turno usando el try catch para manejar errores de validación y errores internos del servidor
+
+// Controlador para crear un nuevo turno
 const createTurno = async (req, res) => {
     try {
-
-        const origenPeticion = req.headers['x-origen'];
-        const tokenSeguridad = req.headers['authorization'];
-
-        console.log("🌎 Peticion realizada desde:", origenPeticion);
-
-        if (tokenSeguridad != 'token123') {
-            return respuestaEstandar(res, 401, false, 'no tiene permisos');
-        }
-        
         const esUrgente = req.query.urgencia === 'true';
 
         const datosDelTurno = {
             paciente: req.body.paciente,
             especialidad: req.body.especialidad,
-            fechaTurno: req.body.fechaTurno
+            fechaTurno: req.body.fechaTurno,
+            medico: req.body.medico
         };
 
         if (esUrgente) {
@@ -51,7 +43,11 @@ const createTurno = async (req, res) => {
         }
 
         const nuevoTurno = await Turno.create(datosDelTurno);
-        return respuestaEstandar(res, 201, true, 'Turno creado exitosamente', nuevoTurno);
+
+        // ✅ Populate del paciente para devolver datos completos
+        const turnoPopulado = await Turno.findById(nuevoTurno._id).populate('paciente');
+
+        return respuestaEstandar(res, 201, true, 'Turno creado exitosamente', turnoPopulado);
     } catch (error) {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
@@ -61,7 +57,6 @@ const createTurno = async (req, res) => {
     }
 };
 
-// Controlador para eliminar un turno por su ID
 const deleteTurno = async (req, res) => {
     try {
         const { id } = req.params;
@@ -70,22 +65,23 @@ const deleteTurno = async (req, res) => {
             { activo: false },
             { new: true }
         );
-        // si no se encuentra el turno con el ID proporcionado, se devuelve un mensaje de error
         if (!turnoEliminado) {
             return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
         }
-        //si el turno se elimina exitosamente, se devuelve un mensaje de éxito con los datos del turno eliminado
         return respuestaEstandar(res, 200, true, 'Turno eliminado exitosamente', turnoEliminado);
     } catch (error) {
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
 };
-// Controlador para obtener turnos filtrados por especialidad
+
 const getTurnosPorEspecialidad = async (req, res) => {
     try {
         const { especialidad } = req.params;
 
-        const turnos = await Turno.find({ especialidad: especialidad.toLowerCase() });
+        const turnos = await Turno.find({ 
+            especialidad: especialidad.toLowerCase(),
+            activo: true  // ✅ Filtrar solo activos
+        }).populate('paciente');
 
         if (turnos.length === 0) {
             return respuestaEstandar(res, 404, false, `No se encontraron turnos para la especialidad "${especialidad}"`);
@@ -97,7 +93,6 @@ const getTurnosPorEspecialidad = async (req, res) => {
     }
 };
 
-// Controlador para actualizar un turno completo (PUT)
 const updateTurno = async (req, res) => {
     try {
         const { id } = req.params;
@@ -105,7 +100,7 @@ const updateTurno = async (req, res) => {
         const turnoActualizado = await Turno.findByIdAndUpdate(id, req.body, {
             new: true,
             runValidators: true,
-        });
+        }).populate('paciente');
 
         if (!turnoActualizado) {
             return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
@@ -125,7 +120,7 @@ const marcarAtendido = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const turnoActualizado = await Turno .findByIdAndUpdate(id, { estado: 'atendido' }, { new: true });
+        const turnoActualizado = await Turno.findByIdAndUpdate(id, { estado: 'atendido' }, { new: true }).populate('paciente');
 
         if (!turnoActualizado) {
             return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
@@ -137,7 +132,6 @@ const marcarAtendido = async (req, res) => {
     }
 };
 
-// Controlador para actualizar solo la especialidad de un turno (PATCH)
 const updateEspecialidad = async (req, res) => {
     try {
         const { id } = req.params;

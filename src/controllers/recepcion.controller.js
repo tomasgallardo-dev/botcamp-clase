@@ -1,10 +1,3 @@
-// ============================================================
-//  CONTROLADOR: Recepcion
-//  Descripción: Maneja el "ingreso" de un paciente nuevo. Usa una
-//  TRANSACCIÓN de MongoDB: crea el paciente y su turno juntos.
-//  Si algo falla, se revierte todo (abortTransaction).
-// ============================================================
-
 const mongoose = require('mongoose');
 const Turno = require('../models/Turno.js');
 const Paciente = require('../models/Pacientes.js');
