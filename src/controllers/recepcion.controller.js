@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Turno = require('../models/Turno.js');
-const Paciente = require('../models/Pacientes.js');
+const Paciente = require('../models/Pacientes.model.js');
 const respuestaEstandar = require('../utils/respuestaEstandar');
 
 const registrarIngreso = async (req, res) => {
@@ -8,7 +8,7 @@ const registrarIngreso = async (req, res) => {
     session.startTransaction();
 
     try {
-        const { datosPaciente, especialidad, fechaTurno, estado, observaciones } = req.body;
+        const { datosPaciente, especialidad, fechaTurno, estado, observaciones, medico } = req.body;
 
         const [nuevoPaciente] = await Paciente.create([datosPaciente], { session });
 
@@ -17,7 +17,8 @@ const registrarIngreso = async (req, res) => {
             especialidad,
             fechaTurno,
             estado: estado || 'pendiente',
-            observaciones
+            observaciones,
+            medico: medico || null,
         }], { session });
 
         await session.commitTransaction();

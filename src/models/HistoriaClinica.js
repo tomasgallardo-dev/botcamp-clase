@@ -14,12 +14,6 @@ const HistoriaClinicaSchema = new mongoose.Schema({
     fecha: {
         type: Date,
         required: [true, 'La fecha del historia clinica es obligatoria'],
-        validate: {
-            validator: function(value) {
-                return value >= new Date();
-            },
-            message: 'La fecha del historia clinica debe ser una fecha futura'
-        }
     },
 
     antecedentes: {

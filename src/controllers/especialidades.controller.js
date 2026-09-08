@@ -1,5 +1,6 @@
 const Especialidades = require('../models/especialidades.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js');
+const { esErrorDuplicado } = require('../utils/manejoErrores.js');
 
 const getEspecialidades = async (req, res) => {
     try {
@@ -18,6 +19,9 @@ const createEspecialidad = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe una especialidad con ese nombre', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
@@ -40,6 +44,9 @@ const updateEspecialidad = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe una especialidad con ese nombre', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }

@@ -24,10 +24,26 @@ const getTurnos = async (req, res) => {
     }
 };
 
+// Controlador para obtener un turno por su ID
+const getTurnoById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const turno = await Turno.findById(id).populate('paciente');
+
+        if (!turno) {
+            return respuestaEstandar(res, 404, false, `Turno no encontrado con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Turno obtenido exitosamente', turno);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
 // Controlador para crear un nuevo turno
 const createTurno = async (req, res) => {
     try {
-        const esUrgente = req.query.urgencia === 'true';
+        const esUrgente = req.query.urgencia === 'true' || req.body.urgente === true;
 
         const datosDelTurno = {
             paciente: req.body.paciente,
@@ -161,4 +177,4 @@ const updateEspecialidad = async (req, res) => {
     }
 };
 
-module.exports = { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad, marcarAtendido };
+module.exports = { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad, marcarAtendido };

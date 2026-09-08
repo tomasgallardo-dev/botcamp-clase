@@ -1,10 +1,11 @@
-const Medico = require('../models/medico.js');
+const Medico = require('../models/medico.model.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js');
+const { esErrorDuplicado } = require('../utils/manejoErrores.js');
 
 // Controlador para obtener todos los médicos
 const getMedicos = async (req, res) => {
     try {
-        const medicos = await Medico.find({ activo: true });
+        const medicos = await Medico.find({ activo: true }).populate('especialidad');
         return respuestaEstandar(res, 200, true, 'Médicos obtenidos exitosamente', medicos);
     } catch (error) {
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
@@ -20,6 +21,9 @@ const createMedico = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un médico con ese dato', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
@@ -59,6 +63,9 @@ const updateMedico = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un médico con ese dato', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }

@@ -1,12 +1,17 @@
-//  MIDDLEWARE: manejo de rutas no encontradas (404)
+//  MIDDLEWARE: manejo centralizado de errores (err, req, res, next)
+//  Se registra SIEMPRE al final de la cadena de middlewares.
 
-const rutaNoEncontrada = (req, res, next) => {
-    res.status(404).json({
-        success: false,
-        timestamp: new Date().toISOString(),
-        error: "Ruta No Encontrada (404)",
-        message: `La ruta ${req.originalUrl} no existe en el servidor`,
-    });
+const respuestaEstandar = require('../utils/respuestaEstandar');
+
+const errorHandler = (err, req, res, next) => {
+    const estado = err.status || 500;
+    const mensaje = estado === 500 ? 'Error interno del servidor' : err.message;
+
+    if (estado === 500) {
+        console.error(`[ERROR] ${err.message}`);
+    }
+
+    return respuestaEstandar(res, estado, false, mensaje, null);
 };
 
-module.exports = rutaNoEncontrada;
+module.exports = errorHandler;

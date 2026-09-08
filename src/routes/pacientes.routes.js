@@ -5,11 +5,13 @@
 
 const express = require("express");
 const router = express.Router();
-const { getPacientes, createPaciente, deletePaciente, agregarConsulta } = require('../controllers/pacientes.controller');
+const { getPacientes, getPacienteById, createPaciente, updatePaciente, deletePaciente, agregarConsulta } = require('../controllers/pacientes.controller');
 
 //Rutas
 router.get("/", getPacientes);
+router.get("/:id", getPacienteById);
 router.post("/", createPaciente);
+router.put("/:id", updatePaciente);
 router.delete("/:id", deletePaciente);
 router.patch("/:id", agregarConsulta);
 

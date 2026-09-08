@@ -1,5 +1,6 @@
-const Consultorio = require('../models/Consultorio');
+const Consultorio = require('../models/Consultorio.model.js');
 const respuestaEstandar = require('../utils/respuestaEstandar');
+const { esErrorDuplicado } = require('../utils/manejoErrores.js');
 
 const getConsultorios = async (req, res) => {
     try {
@@ -21,6 +22,9 @@ const createConsultorio = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un consultorio con ese dato', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
@@ -44,6 +48,9 @@ const updateConsultorio = async (req, res) => {
         if (error.name === 'ValidationError') {
             const errores = Object.values(error.errors).map(err => err.message);
             return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un consultorio con ese dato', error.keyValue);
         }
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }

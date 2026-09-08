@@ -1,5 +1,6 @@
-const Paciente = require('../models/Pacientes.js');
+const Paciente = require('../models/Pacientes.model.js');
 const respuestaEstandar = require('../utils/respuestaEstandar.js')
+const { esErrorDuplicado } = require('../utils/manejoErrores.js')
 
 // controlador para obtener todos los pacientes
 const getPacientes = async (req, res) => {
@@ -36,6 +37,54 @@ const createPaciente = async (req, res) => {
                     const errores = Object.values(error.errors).map(err => err.message);
                     return respuestaEstandar(res, 400, false, 'Error de validación', errores);
     }
+
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un paciente con ese dato', error.keyValue);
+        }
+
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
+// Controlador para obtener un paciente por su ID
+const getPacienteById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const paciente = await Paciente.findById(id);
+
+        if (!paciente) {
+            return respuestaEstandar(res, 404, false, `Paciente no encontrado con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Paciente obtenido exitosamente', paciente);
+    } catch (error) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
+// Controlador para actualizar los datos de un paciente
+const updatePaciente = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const pacienteActualizado = await Paciente.findByIdAndUpdate(
+            id,
+            req.body,
+            { new: true, runValidators: true });
+
+        if (!pacienteActualizado) {
+            return respuestaEstandar(res, 404, false, `Paciente no encontrado con ID ${id}`);
+        }
+
+        return respuestaEstandar(res, 200, true, 'Paciente actualizado exitosamente', pacienteActualizado);
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const errores = Object.values(error.errors).map(err => err.message);
+            return respuestaEstandar(res, 400, false, 'Error de validación', errores);
+        }
+
+        if (esErrorDuplicado(error)) {
+            return respuestaEstandar(res, 409, false, 'Ya existe un paciente con ese dato', error.keyValue);
+        }
 
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
     }
@@ -82,4 +131,4 @@ const agregarConsulta = async (req, res) => {
     }
 };
 
-module.exports = { getPacientes, createPaciente, deletePaciente, agregarConsulta};
+module.exports = { getPacientes, getPacienteById, createPaciente, updatePaciente, deletePaciente, agregarConsulta};

@@ -34,7 +34,7 @@ const turnoSchema = new mongoose.Schema({
     medico: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Medico',
-        required: [true, 'El médico es obligatorio'],
+        default: null,
     },
     estado: {
         type: String,

@@ -8,7 +8,7 @@
 // src/routes/turnos.routes.js
 const express = require("express");
 const router = express.Router();
-const { getTurnos, createTurno, deleteTurno, getTurnosPorEspecialidad,
+const { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspecialidad,
   updateTurno,
   updateEspecialidad, marcarAtendido } = require('../controllers/turnos.controller');
 
@@ -17,6 +17,7 @@ router.get("/", getTurnos);
 router.post("/", createTurno);
 router.delete("/:id", deleteTurno);
 router.get("/especialidad/:especialidad", getTurnosPorEspecialidad);
+router.get("/:id", getTurnoById);
 router.put("/:id", updateTurno);
 router.patch("/:id/especialidad", updateEspecialidad);
 router.patch("/:id/atendido", marcarAtendido);
