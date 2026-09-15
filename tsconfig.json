@@ -1,0 +1,31 @@
+// Este archivo configura el COMPILADOR de TypeScript (TYPE CHECKER + build).
+// tsc --noEmit  -> solo chequea errores de tipos (lo que usamos para validar).
+// tsc           -> además compila a JS y lo deja en ./dist (script "build").
+// OJO: tsconfig permite comentarios (//) aunque la extensión sea .json.
+{
+  "compilerOptions": {
+    "types": ["node"],              // incluye los tipos globales de Node (process, require, etc.)
+    "rootDir": ".",                 // desde dónde empieza a buscar archivos
+    "allowJs": true,                // permite type-chequear archivos .js también (los middlewares/utils)
+    "outDir": "./dist",             // dónde se genera el JS al hacer "build"
+    "module": "commonjs",           // formato de módulos: CommonJS (require/module.exports), compatible con Node
+    "target": "ES2022",             // versión de JS a la que se traduce
+    "sourceMap": true,              // genera .map para debuggear en el TS original
+    "declaration": true,            // genera archivos .d.ts (tipos) al compilar
+    "declarationMap": true,
+    "strict": true,                 // MODO ESTRICTO: chequeos fuertes de null, any implícito, etc.
+    "jsx": "react-jsx",             // (sobra en backend; útil si algún día se usa JSX)
+    "verbatimModuleSyntax": false,  // permite mezclar `import` ESM con `require`/`module.exports` CJS
+    "isolatedModules": true,        // cada archivo se compila de forma independiente
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",     // interpreta cada archivo como módulo aunque no tenga import
+    "skipLibCheck": true,           // no chequea los tipos adentro de librerías externas (más rápido/relaja)
+    "noUncheckedIndexedAccess": true, // acceder a un índice (arr[i], obj[key]) puede ser undefined: te obliga a chequear
+    "exactOptionalPropertyTypes": true // hace que `prop?: T` NO acepte `undefined` explícito (solo "que falte")
+  },
+  "include": [
+    "app.ts",        // archivos que se chequean/compilan
+    "src/**/*.js",
+    "src/**/*.ts"
+  ]
+}
