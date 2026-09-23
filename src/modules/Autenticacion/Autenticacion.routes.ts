@@ -9,6 +9,9 @@ const express = require('express');
 const router = express.Router();
 const { login } = require('./Autenticacion.controller');
 
-router.post('/login', login);
+const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+const { loginSchema } = require('./dtos/Autenticacion.schema');
+
+router.post('/login', validarSchema(loginSchema), login);
 
 module.exports = router;

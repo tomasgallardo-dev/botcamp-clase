@@ -11,7 +11,7 @@
 
 import type { Request, Response } from 'express';
 import { TurnoEstado } from './types/TurnoEstado.enum';      // import "de valores" (real, se usa en runtime)
-import type { ICrearTurnoDTO, IQueryUrgencia } from './dtos/TurnoDTO';
+import type { ICrearTurnoDTO, IQueryUrgencia } from './dtos/Turno.schema';
 
 const Turno = require('./Turno.js');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');

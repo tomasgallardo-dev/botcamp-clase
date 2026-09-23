@@ -13,8 +13,13 @@ const { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspeciali
   updateTurno,
   updateEspecialidad, marcarAtendido } = require('./Turno.controller');
 
+const { CrearTurnoSchema } = require('./dtos/Turno.schema');
+const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+
+// NOTA de validación: el middleware corre ANTES que el controller.
+// Si el body no cumple CrearTurnoSchema -> 400 y ni entra al controller.
 router.get("/", getTurnos);                          // listar (?id= para uno viejo por query)
-router.post("/", createTurno);                       // alta (acepta ?urgencia=true o body.urgente)
+router.post("/", validarSchema(CrearTurnoSchema), createTurno);  // alta (valida con zod)
 router.delete("/:id", deleteTurno);                  // baja (soft: activo:false + CANCELADO)
 router.get("/especialidad/:especialidad", getTurnosPorEspecialidad); // filtro por especialidad
 router.get("/:id", getTurnoById);                    // detalle

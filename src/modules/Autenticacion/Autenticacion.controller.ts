@@ -8,7 +8,7 @@
 // ============================================================
 
 import type { Request, Response } from 'express';
-import type { ILoginDTO } from './dtos/AutenticacionDTO';
+import type { ILoginDTO } from './dtos/Autenticacion.schema';
 
 // POST /api/v1/auth/login
 const login = (req: Request<{}, {}, ILoginDTO>, res: Response) => {

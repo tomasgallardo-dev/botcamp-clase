@@ -8,7 +8,7 @@
     "rootDir": ".",                 // desde dónde empieza a buscar archivos
     "allowJs": true,                // permite type-chequear archivos .js también (los middlewares/utils)
     "outDir": "./dist",             // dónde se genera el JS al hacer "build"
-    "module": "commonjs",           // formato de módulos: CommonJS (require/module.exports), compatible con Node
+    "module": "esnext",           // formato de módulos: CommonJS (require/module.exports), compatible con Node
     "target": "ES2022",             // versión de JS a la que se traduce
     "sourceMap": true,              // genera .map para debuggear en el TS original
     "declaration": true,            // genera archivos .d.ts (tipos) al compilar

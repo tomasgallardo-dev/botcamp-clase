@@ -7,7 +7,7 @@
 // ============================================================
 
 import type { Request, Response } from 'express';
-import type { ICrearEspecialidadDTO, IActualizarEspecialidadDTO } from './dtos/EspecialidadDTO';
+import type { ICrearEspecialidadDTO, IActualizarEspecialidadDTO } from './dtos/Especialidad.schema';
 
 const Especialidad = require('./Especialidad');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');

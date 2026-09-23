@@ -6,10 +6,10 @@
 // ============================================================
 
 import type { Request, Response } from 'express';
-import type { ICrearConsultorioDTO, IActualizarConsultorioDTO } from './dtos/ConsultorioDTO';
+import type { ICrearConsultorioDTO, IActualizarConsultorioDTO } from './dtos/Consultorio.schema';
 
 const Consultorio = require('./Consultorio');
-const respuestaEstandar = require('../../utils/respuestaEstandar.js');
+const respuestaEstandar = require('../../utils/respuestaEstandar');
 const { esErrorDuplicado } = require('../../utils/manejoErrores.js');
 
 // GET /api/v1/consultorios

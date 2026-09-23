@@ -8,7 +8,7 @@
 // ============================================================
 
 import type { Request, Response } from 'express';
-import type { ICrearHistoriaClinicaDTO, IFiltroHistoriaClinicaQuery } from './dtos/HistoriaClinicaDTO';
+import type { ICrearHistoriaClinicaDTO, IFiltroHistoriaClinicaQuery } from './dtos/HistoriaClinica.schema';
 
 const HistoriaClinica = require('./HistoriaClinica.js');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');

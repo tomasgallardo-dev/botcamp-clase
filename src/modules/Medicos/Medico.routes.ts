@@ -9,9 +9,12 @@ const express = require("express");
 const router = express.Router();
 const { getMedicos, createMedico, deleteMedico, updateMedico } = require('./Medico.controller');
 
+const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+const { crearMedicoSchema, actualizarMedicoSchema } = require('./dtos/Medico.schema');
+
 router.get("/", getMedicos);
-router.post("/", createMedico);
-router.put("/:id", updateMedico);
+router.post("/", validarSchema(crearMedicoSchema), createMedico);
+router.put("/:id", validarSchema(actualizarMedicoSchema), updateMedico);
 router.delete("/:id", deleteMedico);
 
 module.exports = router;

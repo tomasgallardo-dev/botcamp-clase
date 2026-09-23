@@ -8,9 +8,12 @@ const express = require("express");
 const router = express.Router();
 const { getEspecialidades, createEspecialidad, updateEspecialidad, deleteEspecialidad } = require('./Especialidad.controller');
 
+const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+const { crearEspecialidadSchema, actualizarEspecialidadSchema } = require('./dtos/Especialidad.schema');
+
 router.get("/", getEspecialidades);
-router.post("/", createEspecialidad);
-router.put("/:id", updateEspecialidad);
+router.post("/", validarSchema(crearEspecialidadSchema), createEspecialidad);
+router.put("/:id", validarSchema(actualizarEspecialidadSchema), updateEspecialidad);
 router.delete("/:id", deleteEspecialidad);
 
 module.exports = router;

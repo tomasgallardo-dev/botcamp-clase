@@ -5,7 +5,9 @@
 //  (es el único lugar que responde 404 en toda la app).
 // ============================================================
 
-const rutaNoEncontrada = (req, res, next) => {
+import type { Request, Response, NextFunction } from 'express';
+
+const rutaNoEncontrada = (req: Request, res: Response, next: NextFunction) => {
     res.status(404).json({
         success: false,
         timestamp: new Date().toISOString(),

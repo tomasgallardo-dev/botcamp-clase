@@ -28,7 +28,7 @@ const express = require("express");
 // la borra al compilar (no hace ningún require en runtime).
 type Application = import ('express').Application;
 // Trae la función connectDB (la que abre la conexión a MongoDB).
-const connectDB = require('./src/config/database');
+const { connectDB } = require('./src/config/database');
 
 // 2) Crea la instancia de la aplicación Express.
 const app = express();

@@ -5,9 +5,13 @@
 //  algún controller llama next(err). Debe registrarse SIEMPRE al FINAL.
 // ============================================================
 
+import type { Request, Response, NextFunction } from 'express';
+
 const respuestaEstandar = require('../utils/respuestaEstandar');
 
-const errorHandler = (err, req, res, next) => {
+// err: any EXPLÍCITO (permitido): un error handler debe poder recibir
+// cualquier cosa que un controller le pase con next(err).
+const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     // Si el error trae su propio status (ej: err.status = 400 lo setea el
     // controller), lo usamos; si no, asumimos 500 (error interno).
     const estado = err.status || 500;

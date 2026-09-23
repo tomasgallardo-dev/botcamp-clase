@@ -8,7 +8,7 @@
 // ============================================================
 
 import type { Request, Response } from 'express';
-import type { IRegistrarIngresoDTO } from './dtos/RecepcionDTO';
+import type { IRegistrarIngresoDTO } from './dtos/Recepcion.schema';
 
 const mongoose = require('mongoose');
 const Turno = require('../Turno/Turno.js');            // requiere el modelo (usa .js por compatibilidad)

@@ -15,12 +15,15 @@ const express = require("express");
 const router = express.Router();
 const { getPacientes, getPacienteById, createPaciente, updatePaciente, deletePaciente, agregarConsulta } = require('./Paciente.controller');
 
-//Rutas
+const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+const { crearPacienteSchema, actualizarPacienteSchema, agregarConsultaSchema } = require('./dtos/Paciente.Schema');
+
+//Rutas  (el middleware valida antes de entrar al controller -> 400 con detalles)
 router.get("/", getPacientes);               // listar (con filtros opcionales en ?query)
 router.get("/:id", getPacienteById);          // detalle de uno (el :id va a req.params)
-router.post("/", createPaciente);             // alta
-router.put("/:id", updatePaciente);           // actualización completa/parcial
+router.post("/", validarSchema(crearPacienteSchema), createPaciente);             // alta validada
+router.put("/:id", validarSchema(actualizarPacienteSchema), updatePaciente);      // actualización validada (partial)
 router.delete("/:id", deletePaciente);        // baja
-router.patch("/:id", agregarConsulta);        // agregar una consulta al historial
+router.patch("/:id", validarSchema(agregarConsultaSchema), agregarConsulta);      // agregar consulta validada
 
 module.exports = router;

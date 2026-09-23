@@ -6,14 +6,14 @@
 //  esquemas, validaciones y relaciones en cada modelo.
 // ============================================================
 
-const mongoose = require('mongoose');
+import  mongoose from'mongoose';
 
 // async => mongoose.connect devuelve una promesa; esperamos su resultado.
-const connectDB = async () => {
+export const connectDB = async (): Promise<void> => {
     try {
         // Conectarse usando la URL del .env
         // (ej: mongodb://127.0.0.1:27017/salita_municipal)
-        await mongoose.connect(process.env.DATABASE_URL);
+        await mongoose.connect(process.env.DATABASE_URL as string);
     } catch (error) {
         // Si acá no hay Mongo corriendo, el proceso NO puede seguir:
         // logueamos el error y matamos el proceso (exit code 1).
@@ -42,4 +42,4 @@ process.on('SIGINT', async () => {
 });
 
 // Exportamos la FUNCIÓN (no un objeto) para que app.ts la llame: connectDB().
-module.exports = connectDB;
+export default connectDB;

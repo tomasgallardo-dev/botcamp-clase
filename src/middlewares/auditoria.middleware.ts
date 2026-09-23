@@ -5,10 +5,13 @@
 //  peticiones ANTES de llegar a la ruta.
 //  - req:  datos de la petición entrante (método, URL, body, params)
 //  - res:  la respuesta que se va a enviar
-//  - next: función que llama al SIGUIENTE middleware de la cadena
+// - next: función que llama al SIGUIENTE middleware de la cadena
 // ============================================================
 
-const auditoriaMunicipal = (req, res, next) => {
+// import type: SOLO tipos, se borra al compilar (no toca el runtime).
+import type { Request, Response, NextFunction } from 'express';
+
+const auditoriaMunicipal = (req: Request, res: Response, next: NextFunction) => {
     const horaActual = new Date().toLocaleTimeString();
     const metodo = req.method;          // ej: GET, POST, PUT, DELETE, PATCH
     const ruta = req.originalUrl;       // ej: /api/v1/pacientes
