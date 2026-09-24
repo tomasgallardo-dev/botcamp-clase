@@ -167,6 +167,20 @@ const updateTurno = async (req: Request<{ id: string }>, res: Response) => {
     }
 };
 
+// DELETE /api/v1/turnos/atendidos  (limpiar los atendidos del panel)
+const limpiarAtendidos = async (req: Request, res: Response) => {
+    try {
+        // Soft-delete: solo "apago" los que están ATENDIDO y aún activos.
+        const resultado = await Turno.updateMany(
+            { estado: TurnoEstado.ATENDIDO, activo: true },
+            { activo: false }
+        );
+        return respuestaEstandar(res, 200, true, 'Turnos atendidos eliminados', { eliminados: resultado.modifiedCount });
+    } catch (error: any) {
+        return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
+    }
+};
+
 // PATCH /api/v1/turnos/:id/atendido (marcar como atendido)
 const marcarAtendido = async (req: Request<{ id: string }>, res: Response) => {
     try {
@@ -214,4 +228,4 @@ const updateEspecialidad = async (req: Request<{ id: string }>, res: Response) =
     }
 };
 
-module.exports = { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad, marcarAtendido };
+module.exports = { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspecialidad, updateTurno, updateEspecialidad, marcarAtendido, limpiarAtendidos };
