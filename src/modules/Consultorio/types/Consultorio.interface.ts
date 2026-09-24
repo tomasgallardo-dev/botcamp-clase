@@ -1,6 +1,6 @@
 // Interfaz de documento Consultorio (solo tipos; valida el schema).
 import type { Types } from 'mongoose';
-import type ITelefono from '../../Pacientes/types/Telefono.interface';
+import type ITelefono from '../../Paciente/types/Telefono.interface';
 
 interface IConsultorio {
     _id: Types.ObjectId;

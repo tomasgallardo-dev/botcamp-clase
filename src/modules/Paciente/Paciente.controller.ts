@@ -10,11 +10,11 @@
 // no genera ningún require en runtime. (import { X } sin "type" sí existe
 // en el código final si X es un valor.)
 import type { Request, Response } from 'express';
-import type { ICrearPacienteDTO, IActualizarPacienteDTO, IFiltroPacientesQuery, IAgregarConsultaDTO } from './dtos/Paciente.Schema';
+import type { ICrearPacienteDTO, IActualizarPacienteDTO, IFiltroPacientesQuery, IAgregarConsultaDTO } from './dtos/Paciente.schema';
 
 // require() = importación REAL (runtime, CommonJS).
 // El modelo se exporta con module.exports, por eso lo traemos con require.
-const Paciente = require('./Pacientes');
+const Paciente = require('./Paciente.model');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');
 const { esErrorDuplicado } = require('../../utils/manejoErrores.js');
 

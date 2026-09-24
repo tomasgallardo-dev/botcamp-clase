@@ -8,7 +8,7 @@
 import type { Request, Response } from 'express';
 import type { ICrearConsultorioDTO, IActualizarConsultorioDTO } from './dtos/Consultorio.schema';
 
-const Consultorio = require('./Consultorio');
+const Consultorio = require('./Consultorio.model');
 const respuestaEstandar = require('../../utils/respuestaEstandar');
 const { esErrorDuplicado } = require('../../utils/manejoErrores.js');
 

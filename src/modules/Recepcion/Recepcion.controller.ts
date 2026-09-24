@@ -11,8 +11,8 @@ import type { Request, Response } from 'express';
 import type { IRegistrarIngresoDTO } from './dtos/Recepcion.schema';
 
 const mongoose = require('mongoose');
-const Turno = require('../Turno/Turno.js');            // requiere el modelo (usa .js por compatibilidad)
-const Paciente = require('../Pacientes/Pacientes.js');
+const Turno = require('../Turno/Turno.model.js');            // requiere el modelo (usa .js por compatibilidad)
+const Paciente = require('../Paciente/Paciente.model.js');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');
 
 // POST /api/v1/recepcion/ingreso

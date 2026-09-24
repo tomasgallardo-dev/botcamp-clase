@@ -9,7 +9,7 @@
 import type { Request, Response } from 'express';
 import type { ICrearMedicoDTO, IActualizarMedicoDTO } from './dtos/Medico.schema';
 
-const Medico = require('./Medico');
+const Medico = require('./Medico.model');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');
 const { esErrorDuplicado } = require('../../utils/manejoErrores.js');
 

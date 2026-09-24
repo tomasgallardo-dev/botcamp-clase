@@ -45,10 +45,10 @@ const rutaNoEncontrada = require("./src/middlewares/rutaNoEncontrada.middleware"
 //    tsx resuelve solo .ts / .js.
 const authRoutes = require('./src/modules/Autenticacion/Autenticacion.routes');
 const turnosRoutes = require("./src/modules/Turno/Turno.routes");
-const pacientesRoutes = require("./src/modules/Pacientes/Paciente.routes");
+const pacientesRoutes = require("./src/modules/Paciente/Paciente.routes");
 const recepcionRoutes = require("./src/modules/Recepcion/Recepcion.routes");
-const especialidadesRoutes = require("./src/modules/Especialidades/Especialidad.routes");
-const medicoRoutes = require("./src/modules/Medicos/Medico.routes");
+const especialidadesRoutes = require("./src/modules/Especialidad/Especialidad.routes");
+const medicoRoutes = require("./src/modules/Medico/Medico.routes");
 const historiaClinicaRoutes = require("./src/modules/HistoriaClinica/HistoriaClinica.routes");
 const consultorioRoutes = require("./src/modules/Consultorio/Consultorio.routes");
 

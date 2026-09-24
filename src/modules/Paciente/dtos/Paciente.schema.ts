@@ -1,5 +1,5 @@
 /* ============================================================
-    Paciente.Schema.ts
+    Paciente.schema.ts
     Patrón "envuelto": los schemas describen el request completo
     ({ body, query }) y el middleware validarSchema los usa.
     Los tipos que exporta el controller los importa (req.body tipado).  

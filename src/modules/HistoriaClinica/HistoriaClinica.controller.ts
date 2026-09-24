@@ -10,7 +10,7 @@
 import type { Request, Response } from 'express';
 import type { ICrearHistoriaClinicaDTO, IFiltroHistoriaClinicaQuery } from './dtos/HistoriaClinica.schema';
 
-const HistoriaClinica = require('./HistoriaClinica.js');
+const HistoriaClinica = require('./HistoriaClinica.model.js');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');
 
 // GET /api/v1/historias-clinicas  (?pacienteId&?medicoId&?fecha&?sintomas)

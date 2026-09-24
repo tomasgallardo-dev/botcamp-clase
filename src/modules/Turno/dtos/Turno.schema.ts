@@ -1,3 +1,5 @@
+// Turno.schema.ts -> valida el body de POST /turnos (paciente, especialidad,
+// fecha, medico, urgencia). Lo usa Turno.routes.ts via validarSchema.
 import { z } from 'zod';
 import { EspecialidadTurno } from '../types/TurnoEspecialidad.const';
 import { TurnoEstado } from '../types/TurnoEstado.enum';

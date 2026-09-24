@@ -6,7 +6,7 @@
 //    - Convertir el JSON recibido del frontend en algo que Mongo entienda
 //  Cada par  propiedad: { type, required, ... }  se llama "field schema".
 //  Este archivo EXPORTA el modelo con module.exports (CommonJS), por eso
-//  el controller lo importa con:  const Paciente = require('./Pacientes');
+//  el controller lo importa con:  const Paciente = require('./Paciente.model');
 // ============================================================
 
 import { Schema, model, Document } from 'mongoose';

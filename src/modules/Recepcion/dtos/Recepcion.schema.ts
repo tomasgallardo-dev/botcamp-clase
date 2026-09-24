@@ -7,7 +7,7 @@
 import { z } from 'zod';
 import { EspecialidadTurno } from '../../Turno/types/TurnoEspecialidad.const';
 import { TurnoEstado } from '../../Turno/types/TurnoEstado.enum';
-import { crearPacienteSchema } from '../../Pacientes/dtos/Paciente.Schema';
+import { crearPacienteSchema } from '../../Paciente/dtos/Paciente.schema';
 
 const ObjectIdRegex = /^[0-9a-fA-F]{24}$/;
 
