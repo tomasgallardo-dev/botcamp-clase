@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "seed": "tsx seed.ts",
     "dev": "nodemon --ext ts,js,json --exec tsx app.ts",
     "build": "tsc"
   },
@@ -25,6 +27,7 @@
     "@types/node": "^26.5.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.2"
   }
 }

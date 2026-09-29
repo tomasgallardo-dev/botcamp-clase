@@ -27,5 +27,8 @@
     "app.ts",        // archivos que se chequean/compilan
     "src/**/*.js",
     "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts"   // los tests los corre vitest (transforma ESM a mano); el tsc los ignora
   ]
 }

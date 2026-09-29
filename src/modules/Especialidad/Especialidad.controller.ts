@@ -10,13 +10,15 @@ import type { Request, Response } from 'express';
 import type { ICrearEspecialidadDTO, IActualizarEspecialidadDTO } from './dtos/Especialidad.schema';
 
 const Especialidad = require('./Especialidad.model');
+const Medico = require('../Medico/Medico.model');
+const Consultorio = require('../Consultorio/Consultorio.model');
 const respuestaEstandar = require('../../utils/respuestaEstandar.js');
 const { esErrorDuplicado } = require('../../utils/manejoErrores.js');
 
 // GET /api/v1/especialidades
 const getEspecialidades = async (req: Request, res: Response) => {
     try {
-        const especialidades = await Especialidad.find();
+        const especialidades = await Especialidad.find().sort({ nombre: 1 }); // C: alfabético
         return respuestaEstandar(res, 200, true, 'Especialidades obtenidos exitosamente', especialidades);
     } catch (error: any) {
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);
@@ -71,12 +73,28 @@ const updateEspecialidad = async (req: Request<{ id: string }, {}, IActualizarEs
 const deleteEspecialidad = async (req: Request<{ id: string }>, res: Response) => {
     try {
         const { id } = req.params;
-        const especialidadEliminada = await Especialidad.findByIdAndDelete(id);
 
-        if (!especialidadEliminada) {
+        // E: integridad referencial: no borrar si médicos o consultorios la usan.
+        const especialidad = await Especialidad.findById(id);
+        if (!especialidad) {
             return respuestaEstandar(res, 404, false, `Especialidad no encontrada con ID ${id}`);
         }
 
+        const [medicos, consultorios] = await Promise.all([
+            Medico.countDocuments({ especialidad: id }),
+            Consultorio.countDocuments({ especialidad: id }),
+        ]);
+
+        if (medicos > 0 || consultorios > 0) {
+            return respuestaEstandar(
+                res,
+                409,
+                false,
+                `No se puede eliminar: la especialidad está asignada a ${medicos} médico(s) y ${consultorios} consultorio(s)`
+            );
+        }
+
+        const especialidadEliminada = await Especialidad.findByIdAndDelete(id);
         return respuestaEstandar(res, 200, true, 'Especialidad eliminada exitosamente', especialidadEliminada);
     } catch (error: any) {
         return respuestaEstandar(res, 500, false, 'Error interno del servidor', error.message);

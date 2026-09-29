@@ -7,12 +7,16 @@
 // ============================================================
 
 import { Schema, model } from 'mongoose';
+const { normalizarNombreEspecialidad } = require('./especialidadUtils');
 
 const especialidadSchema = new Schema({
     nombre: {
         type: String,
         required: [true, 'La especialidad del médico es obligatorio'],
-        uppercase: true,
+        // set normaliza al guardar: trim + sin acentos + MAYÚSCULAS,
+        // para que el índice `unique` sea REAL (sin duplicados disfrazados).
+        // Reemplaza al `uppercase` de antes (que no quitaba acentos).
+        set: (valor: string) => normalizarNombreEspecialidad(valor),
         unique: [true, 'Esta especialidad ya está registrada'], // duplicado -> error 11000 -> 409
     },
     descripcion: {
