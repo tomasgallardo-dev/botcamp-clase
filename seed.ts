@@ -8,7 +8,9 @@
 
 require('dotenv').config();
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const Especialidad = require('./src/modules/Especialidad/Especialidad.model');
+const Usuario = require('./src/modules/auth/Usuario.model');
 const {
     normalizarNombreEspecialidad,
     ESPECIALIDADES_DEFAULT,
@@ -50,6 +52,24 @@ const main = async () => {
         } else {
             console.log(`= Ya existía: ${especialidadDefault.nombre}`);
         }
+    }
+
+    // 3) SEED USUARIO ADMIN: mantiene el login de prueba del frontend.
+    //    Ahora el login valida contra la BD, así que el admin debe existir
+    //    con su password hasheada (bcrypt).
+    const ADMIN_EMAIL = 'admin@salita.com';
+    let usuarioAdmin = await Usuario.findOne({ email: ADMIN_EMAIL });
+    if (!usuarioAdmin) {
+        const passwordHash = await bcrypt.hash('12345', 10);
+        await Usuario.create({
+            email: ADMIN_EMAIL,
+            user: 'admin',
+            password: passwordHash,
+            rol: 'ADMIN',
+        });
+        console.log('+ Usuario admin creado (admin@salita.com / 12345)');
+    } else {
+        console.log('= Usuario admin ya existía');
     }
 
     await mongoose.disconnect();

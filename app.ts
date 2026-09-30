@@ -43,7 +43,7 @@ const rutaNoEncontrada = require("./src/middlewares/rutaNoEncontrada.middleware"
 // 5) Trae los routers de cada módulo. Cada uno es un "router" de Express
 //    que define sus propios endpoints. NOTA: los paths van sin extensión,
 //    tsx resuelve solo .ts / .js.
-const authRoutes = require('./src/modules/Autenticacion/Autenticacion.routes');
+const authRoutes = require('./src/modules/auth/auth.routes');
 const turnosRoutes = require("./src/modules/Turno/Turno.routes");
 const pacientesRoutes = require("./src/modules/Paciente/Paciente.routes");
 const recepcionRoutes = require("./src/modules/Recepcion/Recepcion.routes");

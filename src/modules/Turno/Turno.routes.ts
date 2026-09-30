@@ -15,20 +15,22 @@ const { getTurnos, getTurnoById, createTurno, deleteTurno, getTurnosPorEspeciali
 
 const { CrearTurnoSchema } = require('./dtos/Turno.schema');
 const { validarSchema } = require('../../middlewares/validarDatos.middleware');
+const { validarJWT } = require('../../middlewares/validarJWT.middleware');
 
 // NOTA de validación: el middleware corre ANTES que el controller.
 // Si el body no cumple CrearTurnoSchema -> 400 y ni entra al controller.
-router.get("/", getTurnos);                          // listar (?id= para uno viejo por query)
-router.post("/", validarSchema(CrearTurnoSchema), createTurno);
+// TODOS los endpoints de turnos exigen token válido (validarJWT).
+router.get("/", validarJWT, getTurnos);                          // listar (?id= para uno viejo por query)
+router.post("/", validarJWT, validarSchema(CrearTurnoSchema), createTurno);
 
-router.delete("/atendidos", limpiarAtendidos);
+router.delete("/atendidos", validarJWT, limpiarAtendidos);
 
-router.delete("/:id", deleteTurno); 
+router.delete("/:id", validarJWT, deleteTurno); 
 
-router.get("/especialidad/:especialidad", getTurnosPorEspecialidad); // filtro por especialidad
-router.get("/:id", getTurnoById);                    // detalle
-router.put("/:id", updateTurno);                     // update general
-router.patch("/:id/especialidad", updateEspecialidad); // cambiar solo especialidad
-router.patch("/:id/atendido", marcarAtendido);       // cambiar solo estado a atendido
+router.get("/especialidad/:especialidad", validarJWT, getTurnosPorEspecialidad); // filtro por especialidad
+router.get("/:id", validarJWT, getTurnoById);                    // detalle
+router.put("/:id", validarJWT, updateTurno);                     // update general
+router.patch("/:id/especialidad", validarJWT, updateEspecialidad); // cambiar solo especialidad
+router.patch("/:id/atendido", validarJWT, marcarAtendido);       // cambiar solo estado a atendido
 
 module.exports = router;

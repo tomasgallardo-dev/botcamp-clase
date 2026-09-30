@@ -1,8 +1,8 @@
 /* ============================================================
-    Autenticacion.schema.ts   (reemplaza a AutenticacionDTO.ts)
+    Login.schema.ts   (ex Autenticacion.schema.ts)
     Body de POST /api/v1/auth/login validado con zod.
-    OJO: el login sigue devolviendo {ok, token} (shape propio, no
-    respuestaEstandar) y las credenciales siguen hardcodeadas.
+    El login devuelve {ok, token} (shape propio, no respuestaEstandar)
+    y valida contra la colección `usuarios` (bcrypt + JWT).
  ============================================================ */
 import { z } from 'zod';
 
